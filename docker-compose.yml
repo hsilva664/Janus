@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  python:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "9222:22"  # Map container's SSH port to host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - .:/app
+    working_dir: /app  # Sets /app as the working directory
+    environment:
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+    stdin_open: true  # Keep the container interactive
+    tty: true
