@@ -15,13 +15,15 @@ RUN pip install --no-cache-dir -e .
 
 # Clone the transformers repository and checkout the llavas branch
 RUN mkdir /custom && \
-    git clone https://github.com/hsilva664/transformers.git /custom/transformers && \
+    git clone --depth 1 --branch add-janus-model https://github.com/hsilva664/transformers.git /custom/transformers && \
     cd /custom/transformers && \
-    git checkout yaswanth19-add-janus-model && \
+    git checkout add-janus-model && \
     python -m venv my-venv && \
     source my-venv/bin/activate && \
     pip install --upgrade pip && \
-    sudo apt-get update && \
-    sudo apt-get install -y cmake g++ make && \
-    sudo apt-get install -y libboost-all-dev && \
-    pip install -e ".[dev-torch]"
+    apt-get update && \
+    apt-get install -y --no-install-recommends cmake g++ make libboost-all-dev && \
+    pip install -e ".[dev-torch]" && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /root/.cache/pip/*
